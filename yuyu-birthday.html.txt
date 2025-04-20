@@ -6,99 +6,141 @@
   <style>
     body {
       margin: 0;
-      font-family: "Arial", sans-serif;
-      background-color: #fff0f5;
+      padding: 0;
+      background-color: #fff8f0;
       display: flex;
       justify-content: center;
       align-items: center;
       height: 100vh;
-      overflow: hidden;
-    }
-    #birthday-animation, #rose-container, #wish-cards, #final-message {
-      display: none;
       flex-direction: column;
-      align-items: center;
-      text-align: center;
+      font-family: 'Arial', sans-serif;
     }
-    #birthday-animation {
-      display: flex;
-    }
-    .animated-img {
-      width: 300px;
-      animation: pulse 2s infinite;
-    }
-    @keyframes pulse {
-      0% { transform: scale(1); }
-      50% { transform: scale(1.1); }
-      100% { transform: scale(1); }
-    }
-    .rose {
-      width: 150px;
+    #cake {
       cursor: pointer;
-      transition: transform 1s;
+      width: 300px;
     }
-    .rose:hover {
-      transform: scale(1.1);
+    #message, #wishTitle, #finalMessage {
+      font-size: 24px;
+      margin: 20px;
+      display: none;
     }
-    .rose-text {
-      font-size: 20px;
-      margin-top: 10px;
-    }
-    .card {
-      background-color: white;
-      border: 2px solid pink;
-      border-radius: 12px;
+    .wish-card {
+      background: #ffe0ec;
       padding: 20px;
       margin: 10px;
-      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+      border-radius: 20px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.2);
+      display: none;
       font-size: 18px;
     }
-    #final-message {
-      font-size: 20px;
-      color: #d63384;
-      font-weight: bold;
-      margin-top: 30px;
+    .fireworks {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 9999;
     }
   </style>
 </head>
 <body>
-  <div id="birthday-animation">
-    <img src="https://media.giphy.com/media/3oz8xKaR836UJOYeOc/giphy.gif" alt="生日快乐" class="animated-img" onclick="showRose()">
-  </div>
+  <img id="cake" src="https://i.imgur.com/OdL0XPt.png" alt="生日蛋糕">
+  <div id="wishTitle">请领取钰钰的专属心愿单吧~~</div>
+  <div class="wish-card" id="card1">和仪仪一直在一起</div>
+  <div class="wish-card" id="card2">仪宝顺利上岸，天天开心，身体健康</div>
+  <div class="wish-card" id="card3">钰宝顺利毕业，越来越帅</div>
+  <div id="finalMessage">心愿单已被祝福之神接收，护佑钰钰新的一年里心想事成、万事如意♥♥♥</div>
 
-  <div id="rose-container" onclick="showWishes()">
-    <img src="https://cdn.pixabay.com/photo/2016/02/19/11/53/rose-1209580_960_720.png" alt="玫瑰花" class="rose">
-    <div class="rose-text">请领取钰钰的专属心愿单吧~~</div>
-  </div>
-
-  <div id="wish-cards" onclick="showFinalMessage()">
-    <div class="card">和仪仪一直在一起</div>
-    <div class="card">仪宝顺利上岸，天天开心，身体健康</div>
-    <div class="card">钰宝顺利毕业，越来越帅</div>
-  </div>
-
-  <div id="final-message">
-    心愿单已被祝福之神接收，护佑钰钰新的一年里心想事成、万事如意♥♥♥
-  </div>
+  <canvas class="fireworks"></canvas>
 
   <script>
-    window.onload = () => {
-      document.getElementById('birthday-animation').style.display = 'flex';
-    };
+    const cake = document.getElementById('cake');
+    const wishTitle = document.getElementById('wishTitle');
+    const cards = [
+      document.getElementById('card1'),
+      document.getElementById('card2'),
+      document.getElementById('card3')
+    ];
+    const finalMessage = document.getElementById('finalMessage');
+    let step = 0;
+    
+    cake.addEventListener('click', () => {
+      if (step === 0) {
+        askBirthday();
+      } else if (step === 1) {
+        triggerFireworks();
+        wishTitle.style.display = 'block';
+        step++;
+      } else if (step === 2) {
+        showCards();
+        step++;
+      } else if (step === 3) {
+        finalMessage.style.display = 'block';
+        step++;
+      }
+    });
 
-    function showRose() {
-      document.getElementById('birthday-animation').style.display = 'none';
-      document.getElementById('rose-container').style.display = 'flex';
+    function askBirthday() {
+      let answer = prompt('请问钰钰的生日是？（输入1.1或10.12等日期）');
+      if (answer === '4.20') {
+        alert('答对啦！点击蛋糕继续~');
+        step++;
+      } else {
+        alert('不对哦，再想想？');
+        askBirthday();
+      }
     }
 
-    function showWishes() {
-      document.getElementById('rose-container').style.display = 'none';
-      document.getElementById('wish-cards').style.display = 'flex';
+    function showCards() {
+      cards.forEach(card => card.style.display = 'block');
     }
 
-    function showFinalMessage() {
-      document.getElementById('wish-cards').style.display = 'none';
-      document.getElementById('final-message').style.display = 'block';
+    // 简易烟花特效
+    function triggerFireworks() {
+      const canvas = document.querySelector('.fireworks');
+      const ctx = canvas.getContext('2d');
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+
+      let particles = [];
+
+      function createParticle(x, y) {
+        for (let i = 0; i < 30; i++) {
+          particles.push({
+            x,
+            y,
+            radius: Math.random() * 3 + 2,
+            color: `hsl(${Math.random() * 360}, 100%, 70%)`,
+            velocityX: (Math.random() - 0.5) * 10,
+            velocityY: (Math.random() - 0.5) * 10,
+            life: 100
+          });
+        }
+      }
+
+      function animate() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        particles = particles.filter(p => p.life > 0);
+        particles.forEach(p => {
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, p.radius, 0, 2 * Math.PI);
+          ctx.fillStyle = p.color;
+          ctx.fill();
+          p.x += p.velocityX;
+          p.y += p.velocityY;
+          p.life--;
+        });
+        requestAnimationFrame(animate);
+      }
+
+      document.body.addEventListener('click', (e) => {
+        if (step >= 1 && step < 3) {
+          createParticle(e.clientX, e.clientY);
+        }
+      });
+
+      animate();
     }
   </script>
 </body>
