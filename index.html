@@ -17,7 +17,9 @@
     }
     #cake {
       cursor: pointer;
-      width: 300px;
+      width: 100vw;
+      height: 100vh;
+      object-fit: cover;
     }
     #message, #wishTitle, #finalMessage {
       font-size: 24px;
@@ -45,19 +47,24 @@
   </style>
 </head>
 <body>
-  <!-- 背景音乐 -->
-  <audio id="bgm" loop hidden>
-    <source src="A Thousand Miles.mp3" type="audio/mpeg">
-    您的浏览器不支持音频播放。
-  </audio>
 
+  <!-- 蛋糕图 -->
   <img id="cake" src="yuyucake.png" alt="生日蛋糕">
+
+  <!-- 心愿展示 -->
   <div id="wishTitle">请领取钰钰的专属心愿单吧~~</div>
   <div class="wish-card" id="card1">和仪仪一直在一起</div>
   <div class="wish-card" id="card2">仪宝顺利上岸，天天开心，身体健康</div>
   <div class="wish-card" id="card3">钰宝顺利毕业，越来越帅</div>
   <div id="finalMessage">心愿单已被祝福之神接收，护佑钰钰新的一年里心想事成、万事如意♥♥♥</div>
 
+  <!-- 背景音乐 -->
+  <audio id="bgm" loop hidden>
+    <source src="A%20Thousand%20Miles.mp3" type="audio/mpeg">
+    您的浏览器不支持音频播放。
+  </audio>
+
+  <!-- 烟花画布 -->
   <canvas class="fireworks"></canvas>
 
   <script>
@@ -70,13 +77,13 @@
     ];
     const finalMessage = document.getElementById('finalMessage');
     const bgm = document.getElementById('bgm');
-
     let step = 0;
 
     cake.addEventListener('click', () => {
       if (step === 0) {
         askBirthday();
       } else if (step === 1) {
+        playMusic();
         triggerFireworks();
         wishTitle.style.display = 'block';
         step++;
@@ -93,7 +100,6 @@
       let answer = prompt('请问钰钰的生日是？（输入1.1或10.12等日期）');
       if (answer === '4.20') {
         alert('答对啦！点击蛋糕继续~');
-        bgm.play(); // 播放背景音乐
         step++;
       } else {
         alert('不对哦，再想想？');
@@ -103,6 +109,14 @@
 
     function showCards() {
       cards.forEach(card => card.style.display = 'block');
+    }
+
+    function playMusic() {
+      bgm.play().then(() => {
+        console.log("音乐播放成功！");
+      }).catch(err => {
+        console.error("音乐播放失败：", err);
+      });
     }
 
     // 简易烟花特效
@@ -154,4 +168,5 @@
   </script>
 </body>
 </html>
+
 
