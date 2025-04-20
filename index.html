@@ -4,34 +4,46 @@
   <meta charset="UTF-8">
   <title>钰钰生日快乐</title>
   <style>
+    * {
+      box-sizing: border-box;
+    }
     body {
       margin: 0;
       padding: 0;
       background-color: #fff8f0;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-      flex-direction: column;
+      overflow: hidden;
       font-family: 'Arial', sans-serif;
     }
     #cake {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 100vw;
+      height: 100vh;
+      object-fit: cover;
+      z-index: 1;
       cursor: pointer;
-      width: 300px;
     }
     #message, #wishTitle, #finalMessage {
       font-size: 24px;
       margin: 20px;
       display: none;
+      z-index: 3;
+      position: relative;
+      text-align: center;
     }
     .wish-card {
       background: #ffe0ec;
       padding: 20px;
-      margin: 10px;
+      margin: 10px auto;
       border-radius: 20px;
       box-shadow: 0 0 10px rgba(0,0,0,0.2);
       display: none;
       font-size: 18px;
+      width: fit-content;
+      z-index: 3;
+      position: relative;
     }
     .fireworks {
       position: fixed;
@@ -40,7 +52,28 @@
       width: 100%;
       height: 100%;
       pointer-events: none;
-      z-index: 9999;
+      z-index: 2;
+    }
+
+    /* 🌹 玫瑰花飘落动画样式 */
+    .rose {
+      position: fixed;
+      width: 40px;
+      height: 40px;
+      pointer-events: none;
+      z-index: 4;
+      animation: fall linear infinite;
+    }
+
+    @keyframes fall {
+      0% {
+        transform: translateY(-50px) rotate(0deg);
+        opacity: 1;
+      }
+      100% {
+        transform: translateY(100vh) rotate(360deg);
+        opacity: 0;
+      }
     }
   </style>
 </head>
@@ -51,20 +84,26 @@
   <div class="wish-card" id="card2">仪宝顺利上岸，天天开心，身体健康</div>
   <div class="wish-card" id="card3">钰宝顺利毕业，越来越帅</div>
   <div id="finalMessage">心愿单已被祝福之神接收，护佑钰钰新的一年里心想事成、万事如意♥♥♥</div>
+  <!-- 背景音乐 -->
+  <audio id="bgm" loop hidden>
+    <source src="A%20Thousand%20Miles.mp3" type="audio/mpeg">
+    您的浏览器不支持音频播放。
+  </audio>
+
 
   <canvas class="fireworks"></canvas>
 
   <script>
     const cake = document.getElementById('cake');
     const wishTitle = document.getElementById('wishTitle');
+    const finalMessage = document.getElementById('finalMessage');
     const cards = [
       document.getElementById('card1'),
       document.getElementById('card2'),
       document.getElementById('card3')
     ];
-    const finalMessage = document.getElementById('finalMessage');
     let step = 0;
-    
+
     cake.addEventListener('click', () => {
       if (step === 0) {
         askBirthday();
@@ -77,6 +116,7 @@
         step++;
       } else if (step === 3) {
         finalMessage.style.display = 'block';
+        triggerRoses();
         step++;
       }
     });
@@ -95,8 +135,15 @@
     function showCards() {
       cards.forEach(card => card.style.display = 'block');
     }
+    function playMusic() {
+      bgm.play().then(() => {
+         console.log("音乐播放成功！");
+       }).catch(err => {
+         console.error("音乐播放失败：", err);
+       });
+     }
 
-    // 简易烟花特效
+    // ✨ 烟花效果
     function triggerFireworks() {
       const canvas = document.querySelector('.fireworks');
       const ctx = canvas.getContext('2d');
@@ -111,7 +158,7 @@
             x,
             y,
             radius: Math.random() * 3 + 2,
-            color: hsl(${Math.random() * 360}, 100%, 70%),
+            color: `hsl(${Math.random() * 360}, 100%, 70%)`,
             velocityX: (Math.random() - 0.5) * 10,
             velocityY: (Math.random() - 0.5) * 10,
             life: 100
@@ -141,6 +188,18 @@
       });
 
       animate();
+    }
+
+    // 🌹 玫瑰飘落
+    function triggerRoses() {
+      for (let i = 0; i < 30; i++) {
+        const rose = document.createElement('img');
+        rose.src = 'rose.png'; // 图
+        rose.className = 'rose';
+        rose.style.left = Math.random() * 100 + 'vw';
+        rose.style.animationDuration = (Math.random() * 5 + 5) + 's';
+        document.body.appendChild(rose);
+      }
     }
   </script>
 </body>
