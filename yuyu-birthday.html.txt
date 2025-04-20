@@ -45,7 +45,7 @@
   </style>
 </head>
 <body>
-  <img id="cake" src="https://i.imgur.com/OdL0XPt.png" alt="生日蛋糕">
+  <img id="cake" src="yuyucake.png" alt="生日蛋糕">
   <div id="wishTitle">请领取钰钰的专属心愿单吧~~</div>
   <div class="wish-card" id="card1">和仪仪一直在一起</div>
   <div class="wish-card" id="card2">仪宝顺利上岸，天天开心，身体健康</div>
