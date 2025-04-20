@@ -90,7 +90,6 @@
     您的浏览器不支持音频播放。
   </audio>
 
-
   <canvas class="fireworks"></canvas>
 
   <script>
@@ -110,6 +109,7 @@
       } else if (step === 1) {
         triggerFireworks();
         wishTitle.style.display = 'block';
+        playMusic();  // 播放背景音乐
         step++;
       } else if (step === 2) {
         showCards();
@@ -135,13 +135,15 @@
     function showCards() {
       cards.forEach(card => card.style.display = 'block');
     }
+
     function playMusic() {
+      const bgm = document.getElementById('bgm');
       bgm.play().then(() => {
-         console.log("音乐播放成功！");
-       }).catch(err => {
-         console.error("音乐播放失败：", err);
-       });
-     }
+        console.log("音乐播放成功！");
+      }).catch(err => {
+        console.error("音乐播放失败：", err);
+      });
+    }
 
     // ✨ 烟花效果
     function triggerFireworks() {
